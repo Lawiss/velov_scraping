@@ -1,5 +1,8 @@
 /.DS_Store
 /.vscode
 /__pycache__
+
+#Folder created inside the Docker
 /data
 /notebooks
+/logs

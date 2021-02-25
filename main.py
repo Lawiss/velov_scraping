@@ -1,14 +1,24 @@
-from os import name
-from settings import API_ENDPOINT, STATIONS_TO_FOLLOW, MIN_BIKES_FOR_ALERT, DATA_PATH
-import requests
-import pandas as pd
 import json
+import logging
 from datetime import datetime
+from os import name
+
+import pandas as pd
+import requests
+
+from settings import API_ENDPOINT, DATA_PATH, MIN_BIKES_FOR_ALERT, STATIONS_TO_FOLLOW
+
+logger = logging.getLogger()
 
 
 def get_velov_data(api_endpoint: str = API_ENDPOINT):
 
-    http_response = requests.get(api_endpoint)
+    try:
+        http_response = requests.get(api_endpoint)
+    except Exception as e:
+        logger.error("Error when requesting velo'v API.")
+        raise e
+
     json_data_str = http_response.text
     json_data_dict = json.loads(json_data_str)
 
@@ -45,14 +55,22 @@ def main():
 
     velov_data = get_velov_data(API_ENDPOINT)
 
+    logger.info(f"Scraped data from {velov_data.shape[0]} velo'v stations.")
+
     if not DATA_PATH.exists():
+        logger.info("No historical data found, creating new bistorical data file.")
         velov_data.to_parquet(DATA_PATH)
     else:
         old_hist_data = pd.read_parquet(DATA_PATH)
         data_to_add = remove_data_already_saved(old_hist_data, velov_data)
+        logger.info(
+            f"Adding {data_to_add.shape[0]} stations that have been updated since last time."
+        )
         hist_data = pd.concat((old_hist_data, data_to_add))
         hist_data.to_parquet(DATA_PATH)
 
 
 if __name__ == "__main__":
+    logger.info("Velo'v data scraping process launched.")
     main()
+    logger.info("Velo'v data scraping process finished.")
