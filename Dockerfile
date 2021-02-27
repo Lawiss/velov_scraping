@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.7-slim
 
 USER root
 
@@ -15,7 +15,7 @@ RUN apt-get update && \
     make \
     gcc \
     git \
-    && pip install -r requirements.txt \
+    && pip install --index-url=https://www.piwheels.org/simple -r requirements.txt \
     && apt-get remove -y --purge make gcc build-essential \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
