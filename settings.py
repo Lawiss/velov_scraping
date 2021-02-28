@@ -19,7 +19,7 @@ MIN_BIKES_FOR_ALERT = 1
 
 
 # Data config
-DATA_PATH = PROJECT_PATH / "data/velov_hist_data.parquet"
+DATA_PATH = PROJECT_PATH / "data/velov_hist_data.pkl.compress"
 
 # Logging configuration
 LOG_CONFIG_FILE_PATH = PROJECT_PATH / "logging_config.yml"
