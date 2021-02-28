@@ -15,6 +15,7 @@ RUN apt-get update && \
     git \
     cron \
     nano \
+    libatlas-base-dev \
     && pip install --index-url=https://www.piwheels.org/simple -r requirements.txt \
     && apt-get remove -y --purge make gcc build-essential \
     && apt-get autoremove -y \
