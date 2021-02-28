@@ -30,6 +30,7 @@ RUN crontab /etc/cron.d/velov-cron
 
 COPY .  .
 
+ENTRYPOINT [ "/bin/bash" ]
 
 
 
