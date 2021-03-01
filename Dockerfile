@@ -29,6 +29,8 @@ RUN chmod 0644 /etc/cron.d/velov-cron
 # Apply cron job
 RUN crontab /etc/cron.d/velov-cron
 
+CMD cron
+
 COPY .  .
 
 ENTRYPOINT [ "/bin/bash" ]
