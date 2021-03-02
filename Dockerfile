@@ -1,10 +1,8 @@
-FROM python:3.8-slim
+FROM python:3.7-slim
 
 USER root
 
 WORKDIR /usr/app/
-CMD mkdir data
-CMD mkdir logs
 
 COPY requirements.txt .
 
@@ -14,13 +12,26 @@ RUN apt-get update && \
     build-essential \
     make \
     gcc \
-    && pip install -r requirements.txt \
+    git \
+    cron \
+    nano \
+    libatlas-base-dev \
+    && pip install --index-url=https://www.piwheels.org/simple -r requirements.txt \
     && apt-get remove -y --purge make gcc build-essential \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
+COPY crontab /etc/cron.d/velov-cron
+
+# Give execution rights on the cron job
+RUN chmod 0644 /etc/cron.d/velov-cron
+
+# Apply cron job
+RUN crontab /etc/cron.d/velov-cron
+
 COPY .  .
 
+CMD /usr/sbin/cron -f
 
 
 

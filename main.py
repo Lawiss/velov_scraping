@@ -58,16 +58,16 @@ def main():
     logger.info(f"Scraped data from {velov_data.shape[0]} velo'v stations.")
 
     if not DATA_PATH.exists():
-        logger.info("No historical data found, creating new bistorical data file.")
-        velov_data.to_parquet(DATA_PATH)
+        logger.info("No historical data found, creating new historical data file.")
+        velov_data.to_pickle(DATA_PATH, compression="gzip")
     else:
-        old_hist_data = pd.read_parquet(DATA_PATH)
+        old_hist_data = pd.read_pickle(DATA_PATH, compression="gzip")
         data_to_add = remove_data_already_saved(old_hist_data, velov_data)
         logger.info(
             f"Adding {data_to_add.shape[0]} stations that have been updated since last time."
         )
         hist_data = pd.concat((old_hist_data, data_to_add))
-        hist_data.to_parquet(DATA_PATH)
+        hist_data.to_pickle(DATA_PATH, compression="gzip")
 
 
 if __name__ == "__main__":

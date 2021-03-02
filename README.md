@@ -9,8 +9,9 @@ Docker
 
 ## Run the container
 
-To run the container with docker volumes for pesistent data:
+To run the container in background with docker volumes for pesistent data:
 
 ```shell
-docker run -it -v $(pwd)/logs:/usr/app/logs -v $(pwd)/data:/usr/app/data velov bash     
+docker build -t velov .
+docker run -d -v $(pwd)/logs:/usr/app/logs -v $(pwd)/data:/usr/app/data velov     
 ```
