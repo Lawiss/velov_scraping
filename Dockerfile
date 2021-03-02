@@ -31,7 +31,7 @@ RUN crontab /etc/cron.d/velov-cron
 
 COPY .  .
 
-ENTRYPOINT [ "/bin/bash", "&&", "cron" ]
+CMD /usr/sbin/cron -f
 
 
 
