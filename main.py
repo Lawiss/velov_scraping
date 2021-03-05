@@ -2,11 +2,12 @@ import json
 import logging
 from datetime import datetime
 from os import name
+import time
 
 import pandas as pd
 import requests
 
-from settings import API_ENDPOINT, DATA_PATH, MIN_BIKES_FOR_ALERT, STATIONS_TO_FOLLOW
+from settings import API_ENDPOINT, DATA_PATH, SLEEP_TIME
 
 logger = logging.getLogger()
 
@@ -53,21 +54,25 @@ def remove_data_already_saved(df_hist: pd.DataFrame, new_data_df: pd.DataFrame):
 
 def main():
 
-    velov_data = get_velov_data(API_ENDPOINT)
+    while True:
 
-    logger.info(f"Scraped data from {velov_data.shape[0]} velo'v stations.")
+        velov_data = get_velov_data(API_ENDPOINT)
 
-    if not DATA_PATH.exists():
-        logger.info("No historical data found, creating new historical data file.")
-        velov_data.to_pickle(DATA_PATH, compression="gzip")
-    else:
-        old_hist_data = pd.read_pickle(DATA_PATH, compression="gzip")
-        data_to_add = remove_data_already_saved(old_hist_data, velov_data)
-        logger.info(
-            f"Adding {data_to_add.shape[0]} stations that have been updated since last time."
-        )
-        hist_data = pd.concat((old_hist_data, data_to_add))
-        hist_data.to_pickle(DATA_PATH, compression="gzip")
+        logger.info(f"Scraped data from {velov_data.shape[0]} velo'v stations.")
+
+        if not DATA_PATH.exists():
+            logger.info("No historical data found, creating new historical data file.")
+            velov_data.to_pickle(DATA_PATH, compression="gzip")
+        else:
+            old_hist_data = pd.read_pickle(DATA_PATH, compression="gzip")
+            data_to_add = remove_data_already_saved(old_hist_data, velov_data)
+            logger.info(
+                f"Adding {data_to_add.shape[0]} stations that have been updated since last time."
+            )
+            if data_to_add.shape[0] > 0:
+                hist_data = pd.concat((old_hist_data, data_to_add))
+                hist_data.to_pickle(DATA_PATH, compression="gzip")
+        time.sleep(SLEEP_TIME)
 
 
 if __name__ == "__main__":

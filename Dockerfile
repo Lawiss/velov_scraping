@@ -31,7 +31,7 @@ RUN crontab /etc/cron.d/velov-cron
 
 COPY .  .
 
-CMD /usr/sbin/cron -f
+ENTRYPOINT [ "python","-m","main.py" ]
 
 
 

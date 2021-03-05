@@ -9,13 +9,14 @@ PROJECT_PATH = Path(__file__).parent.absolute()
 
 ENV_VARS = os.environ.copy()
 
+
+# APP settings
 API_ENDPOINT = (
     "https://download.data.grandlyon.com/ws/rdata/jcd_jcdecaux.jcdvelov/all.json"
 )
-STATIONS_TO_FOLLOW = ["Faure / Meynis"]
-
-# APP settings
-MIN_BIKES_FOR_ALERT = 1
+## Default time between each process iteration call is 2.5sec
+DEFAULT_SLEEP_TIME = 60
+SLEEP_TIME = ENV_VARS.get("SLEEP_TIME", DEFAULT_SLEEP_TIME)
 
 
 # Data config
