@@ -13,21 +13,12 @@ RUN apt-get update && \
     make \
     gcc \
     git \
-    cron \
-    nano \
     libatlas-base-dev \
     && pip install --index-url=https://www.piwheels.org/simple -r requirements.txt \
     && apt-get remove -y --purge make gcc build-essential \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
-COPY crontab /etc/cron.d/velov-cron
-
-# Give execution rights on the cron job
-RUN chmod 0644 /etc/cron.d/velov-cron
-
-# Apply cron job
-RUN crontab /etc/cron.d/velov-cron
 
 COPY .  .
 
