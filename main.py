@@ -55,6 +55,7 @@ def remove_data_already_saved(df_hist: pd.DataFrame, new_data_df: pd.DataFrame):
 def main():
 
     while True:
+        logger.info("Velo'v data scraping process launched.")
 
         velov_data = get_velov_data(API_ENDPOINT)
 
@@ -72,10 +73,11 @@ def main():
             if data_to_add.shape[0] > 0:
                 hist_data = pd.concat((old_hist_data, data_to_add))
                 hist_data.to_pickle(DATA_PATH, compression="gzip")
+
+        logger.info("Velo'v data scraping process finished.")
         time.sleep(SLEEP_TIME)
 
 
 if __name__ == "__main__":
-    logger.info("Velo'v data scraping process launched.")
+    logger.info(f"Process starting with sleep time {SLEEP_TIME}")
     main()
-    logger.info("Velo'v data scraping process finished.")
