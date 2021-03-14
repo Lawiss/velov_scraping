@@ -8,16 +8,28 @@ import pandas as pd
 import requests
 
 from settings import API_ENDPOINT, DATA_PATH, SLEEP_TIME
+from database_handler import DatabaseHandler
 
 logger = logging.getLogger()
 
 
-def get_velov_data(api_endpoint: str = API_ENDPOINT):
+def get_velov_data(api_endpoint: str = API_ENDPOINT) -> pd.DataFrame:
+    """Request the velo'v API endpoint to get data from stations.
 
+    Parameters:
+    ----------
+    api_endpoint : str
+        URL of the API endpoint. See settings.py for default value.
+
+    Returns
+    -------
+    DataFrame
+        DataFrame containing the velo'v data.
+    """
     try:
         http_response = requests.get(api_endpoint)
     except Exception as e:
-        logger.error("Error when requesting velo'v API.")
+        logger.error(f"Error when requesting velo'v API :{e}")
         raise e
 
     json_data_str = http_response.text
@@ -30,29 +42,8 @@ def get_velov_data(api_endpoint: str = API_ENDPOINT):
     return data_df
 
 
-def remove_data_already_saved(df_hist: pd.DataFrame, new_data_df: pd.DataFrame):
-
-    last_request_date = df_hist["request_date"].sort_values().tail(1).item()
-    last_hist_data = df_hist[df_hist.request_date == last_request_date]
-
-    joined_data = pd.merge(
-        new_data_df, last_hist_data, on="number", how="left", suffixes=("", "_old")
-    )
-
-    # Join old data with new data and keep only new data lines with last update
-    # earlier than old data last update.
-    # Also keep new data lines that does not appear in new data
-    # and thus have NaN old data last update.
-    new_data_to_keep = joined_data.loc[
-        (joined_data.last_update > joined_data.last_update_old)
-        | joined_data.last_update_old.isna(),
-        ~joined_data.columns.str.endswith("_old"),
-    ]
-
-    return new_data_to_keep
-
-
 def main():
+    db_handler = DatabaseHandler(DATA_PATH)
 
     while True:
         logger.info("Velo'v data scraping process launched.")
@@ -61,18 +52,24 @@ def main():
 
         logger.info(f"Scraped data from {velov_data.shape[0]} velo'v stations.")
 
-        if not DATA_PATH.exists():
-            logger.info("No historical data found, creating new historical data file.")
-            velov_data.to_pickle(DATA_PATH, compression="gzip")
-        else:
-            old_hist_data = pd.read_pickle(DATA_PATH, compression="gzip")
-            data_to_add = remove_data_already_saved(old_hist_data, velov_data)
+        if db_handler.get_db_count() == 0:
+
             logger.info(
-                f"Adding {data_to_add.shape[0]} stations that have been updated since last time."
+                "No historical data found, inersting new historical data to db."
             )
-            if data_to_add.shape[0] > 0:
-                hist_data = pd.concat((old_hist_data, data_to_add))
-                hist_data.to_pickle(DATA_PATH, compression="gzip")
+
+            db_handler.insert_data(velov_data)
+
+        else:
+            new_data_to_add_df = db_handler.filter_old_data(velov_data)
+
+            if new_data_to_add_df.shape[0] > 0:
+                logger.info(
+                    f"Adding {new_data_to_add_df.shape[0]} stations that have been updated since last time."
+                )
+                db_handler.insert_data(new_data_to_add_df)
+            else:
+                logger.info("No new data")
 
         logger.info("Velo'v data scraping process finished.")
         time.sleep(SLEEP_TIME)

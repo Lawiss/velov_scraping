@@ -20,7 +20,38 @@ SLEEP_TIME = ENV_VARS.get("SLEEP_TIME", DEFAULT_SLEEP_TIME)
 
 
 # Data config
-DATA_PATH = PROJECT_PATH / "data/velov_hist_data.pkl.compress"
+DATA_PATH = PROJECT_PATH / "data/velov.db"
+COLUMN_NAMES = [
+    "number",
+    "pole",
+    "available_bikes",
+    "code_insee",
+    "lng",
+    "availability",
+    "availabilitycode",
+    "etat",
+    "startdate",
+    "langue",
+    "bike_stands",
+    "last_update",
+    "available_bike_stands",
+    "gid",
+    "titre",
+    "status",
+    "commune",
+    "description",
+    "nature",
+    "bonus",
+    "address2",
+    "address",
+    "lat",
+    "last_update_fme",
+    "enddate",
+    "name",
+    "banking",
+    "nmarrond",
+    "request_date",
+]
 
 # Logging configuration
 LOG_CONFIG_FILE_PATH = PROJECT_PATH / "logging_config.yml"
