@@ -16,7 +16,8 @@ logger = logging.getLogger()
 def get_velov_data(api_endpoint: str = API_ENDPOINT) -> pd.DataFrame:
     """Request the velo'v API endpoint to get data from stations.
 
-    Parameters:
+    Parameters
+
     ----------
     api_endpoint : str
         URL of the API endpoint. See settings.py for default value.
@@ -55,7 +56,8 @@ def main():
         if db_handler.get_db_count() == 0:
 
             logger.info(
-                "No historical data found, inersting new historical data to db."
+                "No historical data found, inserting new historical data to db."
+
             )
 
             db_handler.insert_data(velov_data)
