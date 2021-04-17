@@ -16,7 +16,7 @@ logger = logging.getLogger()
 def get_velov_data(api_endpoint: str = API_ENDPOINT) -> pd.DataFrame:
     """Request the velo'v API endpoint to get data from stations.
 
-    Parameters:
+    Parameters
     ----------
     api_endpoint : str
         URL of the API endpoint. See settings.py for default value.
