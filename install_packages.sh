@@ -2,7 +2,7 @@
 
 arch=$(uname -a)
 
-if [[ "$arch" == *"aarch64"* ]] 
+if [[ "$arch" == *"armv7l"* ]] 
 then
     pip install --index-url=https://www.piwheels.org/simple -r requirements.txt
 else
