@@ -31,6 +31,7 @@ class DatabaseHandler:
 
         """
         cur = self.database.cursor()
+
         cur.execute(f"CREATE TABLE IF NOT EXISTS velov {tuple(COLUMN_NAMES)}")
         self.database.commit()
 
@@ -63,6 +64,7 @@ class DatabaseHandler:
 
         """
 
+
         last_hist_data_df = self.get_last_db_data()
         joined_data = pd.merge(
             new_data_df,
@@ -94,6 +96,7 @@ class DatabaseHandler:
 
         """
 
+
         last_data_df = pd.read_sql(
             "SELECT * FROM velov WHERE request_date = (SELECT request_date FROM velov ORDER BY request_date DESC LIMIT 1)",
             self.database,
@@ -110,6 +113,7 @@ class DatabaseHandler:
             datetime object containing the date of the last API call.
 
         """
+
         cursor = self.database.cursor()
         cursor.execute(
             "SELECT request_date FROM velov ORDER BY request_date DESC LIMIT 1"
@@ -129,6 +133,7 @@ class DatabaseHandler:
             Number of rows in the velov table
 
         """
+
         cursor = self.database.cursor()
         cursor.execute("SELECT COUNT(*) FROM velov")
 
