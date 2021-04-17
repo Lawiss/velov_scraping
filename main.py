@@ -55,7 +55,7 @@ def main():
         if db_handler.get_db_count() == 0:
 
             logger.info(
-                "No historical data found, inersting new historical data to db."
+                "No historical data found, inserting new historical data to db."
             )
 
             db_handler.insert_data(velov_data)
