@@ -8,7 +8,7 @@ import pandas as pd
 import requests
 
 from settings import API_ENDPOINT, DATA_PATH, SLEEP_TIME
-from database_handler import DatabaseHandler
+from utils.database_handler import DatabaseHandler
 
 logger = logging.getLogger()
 
@@ -27,11 +27,8 @@ def get_velov_data(api_endpoint: str = API_ENDPOINT) -> pd.DataFrame:
     DataFrame
         DataFrame containing the velo'v data.
     """
-    try:
-        http_response = requests.get(api_endpoint)
-    except Exception as e:
-        logger.error(f"Error when requesting velo'v API :{e}")
-        raise e
+
+    http_response = requests.get(api_endpoint)
 
     json_data_str = http_response.text
     json_data_dict = json.loads(json_data_str)
@@ -49,7 +46,17 @@ def main():
     while True:
         logger.info("Velo'v data scraping process launched.")
 
-        velov_data = get_velov_data(API_ENDPOINT)
+        try:
+            velov_data = get_velov_data(API_ENDPOINT)
+        except Exception as error:
+            logger.error(
+                f"""Error in getting velo'v data from endpoint.
+Error message: {error}.
+Retrying in {SLEEP_TIME} seconds.
+                """
+            )
+            time.sleep(SLEEP_TIME)
+            continue
 
         logger.info(f"Scraped data from {velov_data.shape[0]} velo'v stations.")
 
@@ -57,7 +64,6 @@ def main():
 
             logger.info(
                 "No historical data found, inserting new historical data to db."
-
             )
 
             db_handler.insert_data(velov_data)

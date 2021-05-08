@@ -21,10 +21,11 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 
-COPY .  .
+COPY velov_scraping/  velov_scraping/
+COPY logging_config.yml .
 
 
-ENTRYPOINT [ "python","main.py" ]
+ENTRYPOINT [ "python","velov_scraping/main.py" ]
 
 
 
