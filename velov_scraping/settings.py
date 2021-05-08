@@ -5,7 +5,8 @@ from pathlib import Path
 
 import yaml
 
-PROJECT_PATH = Path(__file__).parent.absolute()
+PROJECT_PATH = Path(__file__).parents[1].absolute()
+
 
 ENV_VARS = os.environ.copy()
 
@@ -56,6 +57,8 @@ COLUMN_NAMES = [
 # Logging configuration
 LOG_CONFIG_FILE_PATH = PROJECT_PATH / "logging_config.yml"
 LOG_FILE_PATH = PROJECT_PATH / "logs/app.log"
+if not LOG_FILE_PATH.parent.exists():
+    LOG_FILE_PATH.parent.mkdir()
 log_config = yaml.load(open(LOG_CONFIG_FILE_PATH))
 log_config["handlers"]["file"]["filename"] = LOG_FILE_PATH
 logging.config.dictConfig(log_config)
