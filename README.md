@@ -20,7 +20,7 @@ To run the container in background with docker volumes for pesistent data:
 
 ```shell
 docker build -t velov .
-docker run -d -v $(pwd)/logs:/usr/app/logs -v $(pwd)/data:/usr/app/data velov     
+docker run -d -v $(pwd)/logs:/usr/app/logs -v $(pwd)/data:/usr/app/data velov    
 ```
 
 ## Settings

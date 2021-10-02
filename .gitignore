@@ -6,52 +6,11 @@
 /notebooks
 /logs
 
-
-Skip to content
-Pull requests
-Issues
-Marketplace
-Explore
-@Lawiss
-github /
-gitignore
-Public
-
-3.2k
-124k
-
-    69.3k
-
-Code
-Pull requests 323
-Actions
-Security
-
-    Insights
-
-gitignore/Python.gitignore
-@pradyunsg
-pradyunsg Remove pip-wheel-metadata/ from Python.gitignore (#3364)
-Latest commit 14f8a8b on 11 Apr 2020
-History
-83 contributors
-@arcresu
-@shiftkey
-@Lucretiel
-@Harrison-G
-@jwg4
-@GabrielC101
-@misaelnieto
-@pmsosa
-@svkampen
-@vltr
-@thedrow
-@matheussl
-138 lines (112 sloc) 1.99 KB
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
 
 # C extensions
 *.so
