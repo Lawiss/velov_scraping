@@ -33,6 +33,7 @@ class DatabaseHandler:
         cur = self.database.cursor()
 
         cur.execute(f"CREATE TABLE IF NOT EXISTS velov {tuple(COLUMN_NAMES)}")
+        cur.execute("CREATE INDEX table_idx ON velov(request_date,number)")
         self.database.commit()
 
     def insert_data(self, new_data_df: pd.DataFrame):
@@ -64,7 +65,6 @@ class DatabaseHandler:
 
         """
 
-
         last_hist_data_df = self.get_last_db_data()
         joined_data = pd.merge(
             new_data_df,
@@ -95,7 +95,6 @@ class DatabaseHandler:
             Dataframe containing data of the last API call.
 
         """
-
 
         last_data_df = pd.read_sql(
             "SELECT * FROM velov WHERE request_date = (SELECT request_date FROM velov ORDER BY request_date DESC LIMIT 1)",
